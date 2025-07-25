@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAY HARD TIMER - GOGGINS MODE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700;900&family=Anton:wght@400&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-yellow: #fbbf24;
+            --red-accent: #dc2626;
+            --green-accent: #059669;
+            --blue-accent: #1d4ed8;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://i.ibb.co/bSgz3S4/image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #e5e7eb;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .military-panel {
+            border: 3px solid var(--primary-yellow);
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            max-width: 28rem;
+            width: 100%;
+        }
+        
+        .goggins-quote {
+            font-family: 'Anton', sans-serif;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow-pulse {
+            from { text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+            to { text-shadow: 0 0 30px rgba(251, 191, 36, 0.8); }
+        }
+        
+        .timer-display {
+            font-family: 'Rajdhani', monospace;
+            font-weight: 700;
+            font-size: 4rem;
+            color: var(--primary-yellow);
+            text-shadow: 0 0 20px var(--primary-yellow);
+            animation: timer-pulse 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes timer-pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.02); }
+        }
+        
+        .control-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .navy-seal-btn {
+            background: linear-gradient(135deg, var(--blue-accent) 0%, #1e40af 100%);
+            border: 2px solid #3b82f6;
+            color: white;
+        }
+        
+        .navy-seal-btn:hover {
+            background: linear-gradient(135deg, #1e40af 0%, var(--blue-accent) 100%);
+            transform: translateY(-2px);
+        }
+        
+        .hard-btn {
+            background: linear-gradient(135deg, var(--red-accent) 0%, #b91c1c 100%);
+            border: 2px solid #ef4444;
+            color: white;
+        }
+        
+        .hard-btn:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, var(--red-accent) 100%);
+            transform: translateY(-2px);
+        }
+        
+        .gray-btn {
+            background: #374151;
+            border: 2px solid #6b7280;
+            color: white;
+        }
+        
+        .gray-btn:hover {
+            background: #4b5563;
+        }
+        
+        .audio-active {
+            background: linear-gradient(135deg, var(--green-accent) 0%, #047857 100%) !important;
+            border-color: #10b981 !important;
+            animation: audio-pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes audio-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(5, 150, 105, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(5, 150, 105, 0.9); }
+        }
+        
+        .mode-indicator {
+            animation: mode-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes mode-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .rest-mode {
+            border-color: var(--green-accent);
+        }
+        
+        .rest-mode .timer-display {
+            color: var(--green-accent);
+            text-shadow: 0 0 20px var(--green-accent);
+        }
+        
+        .victory-mode {
+            animation: victory 0.6s ease-in-out 3;
+        }
+        
+        @keyframes victory {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        /* Focus Mode */
+        .focus-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+        }
+        
+        @media (max-width: 768px) {
+            .timer-display { font-size: 2.5rem; }
+            .control-btn { padding: 0.75rem 1rem; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container" class="military-panel">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="bg-black text-yellow-400 text-sm px-4 py-2 rounded-full inline-block mb-4 border border-yellow-400">
+                <i class="fas fa-medal mr-2"></i>OFFICIAL GOGGINS MODE
+            </div>
+            <h1 class="text-5xl font-bold goggins-quote mb-2">STAY HARD</h1>
+            <p class="text-gray-300">"Who's gonna carry the boats?"</p>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="text-center mb-8">
+            <div id="timer-display" class="timer-display mb-2">50:00</div>
+            <div id="mode-display" class="text-xl font-semibold text-yellow-400">BATTLE MODE</div>
+        </div>
+
+        <!-- Quote -->
+        <div id="goggins-quote" class="text-center mb-8 text-lg text-white max-w-md mx-auto">
+            "When you think you're done, you're only at 40% of what you're capable of."
+        </div>
+
+        <!-- Controls -->
+        <div class="space-y-4">
+            <div class="flex space-x-4">
+                <button id="start-btn" class="flex-1 navy-seal-btn control-btn">
+                    <i class="fas fa-play mr-2"></i>ENGAGE
+                </button>
+                <button id="reset-btn" class="flex-1 gray-btn control-btn">
+                    <i class="fas fa-redo mr-2"></i>RESET
+                </button>
+            </div>
+            
+            <button id="skip-btn" class="w-full hard-btn control-btn">
+                <i class="fas fa-forward mr-2"></i>ADVANCE MISSION
+            </button>
+            
+            <div class="flex space-x-4">
+                <button id="music-btn" class="flex-1 gray-btn control-btn">
+                    <i class="fas fa-headphones mr-2"></i>AUDIO
+                </button>
+                <button id="focus-btn" class="flex-1 hard-btn control-btn">
+                    <i class="fas fa-crosshairs mr-2"></i>LOCK IN
+                </button>
+            </div>
+        </div>
+
+        <!-- Mode Indicator -->
+        <div class="mt-8 flex justify-center space-x-6">
+            <div class="flex items-center">
+                <div id="work-indicator" class="h-4 w-4 rounded-full bg-yellow-400 mr-2 mode-indicator"></div>
+                <span class="text-sm">BATTLE MODE</span>
+            </div>
+            <div class="flex items-center">
+                <div id="rest-indicator" class="h-4 w-4 rounded-full bg-gray-600 mr-2"></div>
+                <span class="text-sm">RECOVERY</span>
+            </div>
+        </div>
+
+        <!-- Signature -->
+        <div class="mt-8 text-center text-sm text-gray-400">
+            "They don't know me son!" - David Goggins
+        </div>
+    </div>
+
+    <script>
+        // Timer Configuration
+        const WORK_DURATION = 50 * 60; // 50 minutes
+        const REST_DURATION = 5 * 60;  // 5 minutes
+        
+        let timeLeft = WORK_DURATION;
+        let isRunning = false;
+        let isWorkMode = true;
+        let isMusicEnabled = false;
+        let isFocusMode = false;
+        let timerInterval = null;
+        let completedCycles = 0;
+        let userInteracted = false;
+        
+        // DOM Elements
+        const timerDisplay = document.getElementById('timer-display');
+        const modeDisplay = document.getElementById('mode-display');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const musicBtn = document.getElementById('music-btn');
+        const focusBtn = document.getElementById('focus-btn');
+        const workIndicator = document.getElementById('work-indicator');
+        const restIndicator = document.getElementById('rest-indicator');
+        const appContainer = document.getElementById('app-container');
+        const gogginsQuote = document.getElementById('goggins-quote');
+        
+        // Audio Element - Using the new Catbox URL
+        const gogginsAudio = new Audio('https://files.catbox.moe/nm0jka.mp3');
+        gogginsAudio.loop = true;
+        gogginsAudio.volume = 0.7;
+        
+        // David Goggins Quotes
+        const workQuotes = [
+            "\"When you think you're done, you're only at 40% of what you're capable of.\"",
+            "\"The only way to grow is to embrace the suck.\"",
+            "\"Don't stop when you're tired. Stop when you're done.\"",
+            "\"Who's gonna carry the boats and the logs?!\"",
+            "\"They don't know me son!\"",
+            "\"Stay hard!\"",
+            "\"You have to build calluses on your brain.\"",
+            "\"Get comfortable being uncomfortable.\"",
+            "\"Pain is weakness leaving the body.\"",
+            "\"I don't stop when I'm tired. I stop when I'm done.\"",
+            "\"The cookie jar is where you go to find more energy.\"",
+            "\"Accountability mirror doesn't lie.\"",
+            "\"Motivation is crap. You need discipline.\""
+        ];
+        
+        const restQuotes = [
+            "\"Recovery is part of the battle.\"",
+            "\"Even warriors need to recharge.\"",
+            "\"Stay hard, but stay smart.\"",
+            "\"The mind is the most powerful weapon.\"",
+            "\"Use this time to visualize victory.\"",
+            "\"Rest is preparation for war.\"",
+            "\"Recover strong, fight harder.\"",
+            "\"Every breath is preparation for battle.\""
+        ];
+        
+        // Update Display
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Update Mode Indicators
+        function updateModeIndicator() {
+            if (isWorkMode) {
+                workIndicator.className = 'h-4 w-4 rounded-full bg-yellow-400 mr-2 mode-indicator';
+                restIndicator.className = 'h-4 w-4 rounded-full bg-gray-600 mr-2';
+                appContainer.classList.remove('rest-mode');
+            } else {
+                workIndicator.className = 'h-4 w-4 rounded-full bg-gray-600 mr-2';
+                restIndicator.className = 'h-4 w-4 rounded-full bg-green-400 mr-2 mode-indicator';
+                appContainer.classList.add('rest-mode');
+            }
+        }
+        
+        // Set Random Quote
+        function setRandomQuote() {
+            const quotes = isWorkMode ? workQuotes : restQuotes;
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            gogginsQuote.textContent = quotes[randomIndex];
+        }
+        
+        // Audio Management
+        function updateAudio() {
+            if (isMusicEnabled && isWorkMode && userInteracted) {
+                gogginsAudio.currentTime = 0;
+                gogginsAudio.play().then(() => {
+                    console.log('✅ Goggins audio playing successfully!');
+                    showNotification('🔊 Goggins Audio Active!', 'success');
+                }).catch(error => {
+                    console.log('❌ Audio play failed:', error);
+                    showNotification('❌ Audio Blocked - Click anywhere first!', 'error');
+                });
+            } else {
+                gogginsAudio.pause();
+                gogginsAudio.currentTime = 0;
+            }
+        }
+        
+        // Timer Functions
+        function startTimer() {
+            isRunning = true;
+            startBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>HOLD';
+            startBtn.classList.add('animate-pulse');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                
+                if (timeLeft <= 0) {
+                    switchMode();
+                }
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            isRunning = false;
+            startBtn.innerHTML = '<i class="fas fa-play mr-2"></i>ENGAGE';
+            startBtn.classList.remove('animate-pulse');
+            clearInterval(timerInterval);
+        }
+        
+        function switchMode() {
+            clearInterval(timerInterval);
+            
+            if (isWorkMode) {
+                // Switch to rest mode
+                isWorkMode = false;
+                timeLeft = REST_DURATION;
+                modeDisplay.textContent = "RECOVERY MODE";
+                showNotification('💚 Recovery Time - Take a break!', 'success');
+            } else {
+                // Switch to work mode
+                isWorkMode = true;
+                timeLeft = WORK_DURATION;
+                modeDisplay.textContent = "BATTLE MODE";
+                completedCycles++;
+                
+                showNotification(`💪 Back to Work - Cycle ${completedCycles}`, 'success');
+                
+                // Victory animation every 4 cycles
+                if (completedCycles % 4 === 0) {
+                    appContainer.classList.add('victory-mode');
+                    setTimeout(() => appContainer.classList.remove('victory-mode'), 1800);
+                    showNotification('🏆 4 Cycles Complete - You\'re a Warrior!', 'success');
+                }
+            }
+            
+            updateDisplay();
+            updateModeIndicator();
+            setRandomQuote();
+            updateAudio();
+            startTimer();
+        }
+        
+        // Show Notifications
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                info: 'bg-blue-600',
+                success: 'bg-green-600', 
+                error: 'bg-red-600',
+                warning: 'bg-yellow-600'
+            };
+            
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg font-bold z-50 transform translate-x-full transition-transform duration-300`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.remove('translate-x-full'), 100);
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            userInteracted = true;
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            userInteracted = true;
+            pauseTimer();
+            isWorkMode = true;
+            timeLeft = WORK_DURATION;
+            completedCycles = 0;
+            modeDisplay.textContent = "BATTLE MODE";
+            updateDisplay();
+            updateModeIndicator();
+            setRandomQuote();
+            updateAudio();
+            showNotification('🔄 Timer Reset - Ready for Battle!', 'info');
+        });
+        
+        skipBtn.addEventListener('click', () => {
+            userInteracted = true;
+            switchMode();
+        });
+        
+        musicBtn.addEventListener('click', () => {
+            userInteracted = true;
+            isMusicEnabled = !isMusicEnabled;
+            
+            if (isMusicEnabled) {
+                musicBtn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>AUDIO ON';
+                musicBtn.classList.add('audio-active');
+                showNotification('🎵 Goggins Audio Enabled!', 'success');
+            } else {
+                musicBtn.innerHTML = '<i class="fas fa-headphones mr-2"></i>AUDIO';
+                musicBtn.classList.remove('audio-active');
+                showNotification('🔇 Audio Disabled', 'info');
+            }
+            
+            updateAudio();
+        });
+        
+        focusBtn.addEventListener('click', () => {
+            userInteracted = true;
+            isFocusMode = !isFocusMode;
+            
+            if (isFocusMode) {
+                focusBtn.innerHTML = '<i class="fas fa-lock mr-2"></i>LOCKED IN';
+                document.body.classList.add('focus-mode');
+                showNotification('🎯 Focus Mode Activated!', 'warning');
+                if (!isRunning) startTimer();
+            } else {
+                focusBtn.innerHTML = '<i class="fas fa-crosshairs mr-2"></i>LOCK IN';
+                document.body.classList.remove('focus-mode');
+                showNotification('↩️ Focus Mode Deactivated', 'info');
+            }
+        });
+        
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            userInteracted = true;
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    startBtn.click();
+                    break;
+                case 'KeyR':
+                    resetBtn.click();
+                    break;
+                case 'KeyS':
+                    skipBtn.click();
+                    break;
+                case 'KeyM':
+                    musicBtn.click();
+                    break;
+                case 'KeyF':
+                    focusBtn.click();
+                    break;
+            }
+        });
+        
+        // Initialize
+        updateDisplay();
+        updateModeIndicator();
+        setRandomQuote();
+        
+        // Welcome Message
+        setTimeout(() => {
+            showNotification('💪 Welcome to David Goggins Timer!', 'info');
+        }, 1000);
+    </script>
+</body>
+</html>
